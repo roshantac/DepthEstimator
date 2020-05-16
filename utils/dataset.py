@@ -15,9 +15,10 @@ class BasicDataset(Dataset):
         self.scale = scale
         assert 0 < scale <= 1, 'Scale must be between 0 and 1'
 
-        self.ids = [splitext(file)[0] for file in listdir(imgs_dir)
-                    if not file.startswith('.')]
-        logging.info(f'Creating dataset with {len(self.ids)} examples')
+        self.ids = listdir(self.imgs_dir)
+        #  [splitext(file)[0] for file in listdir(imgs_dir)
+        #             if not file.startswith('.')]
+        # logging.info(f'Creating dataset with {len(self.ids)} examples')
 
     def __len__(self):
         return len(self.ids)
@@ -43,15 +44,19 @@ class BasicDataset(Dataset):
 
     def __getitem__(self, i):
         idx = self.ids[i]
-        mask_file = glob(self.masks_dir + idx + '*')
-        img_file = glob(self.imgs_dir + idx + '*')
 
-        assert len(mask_file) == 1, \
-            f'Either no mask or multiple masks found for the ID {idx}: {mask_file}'
-        assert len(img_file) == 1, \
-            f'Either no image or multiple images found for the ID {idx}: {img_file}'
-        mask = Image.open(mask_file[0])
-        img = Image.open(img_file[0])
+        #idx = self.fgbg[index]
+        imgmsk = 'mask' + idx[3:] 
+
+        mask_file = self.masks_dir + imgmsk #glob(self.masks_dir + idx + '*')
+        img_file = self.imgs_dir + idx #glob(self.imgs_dir + idx + '*')
+
+        # assert len(mask_file) == 1, \
+        #     f'Either no mask or multiple masks found for the ID {idx}: {mask_file}'
+        # assert len(img_file) == 1, \
+        #     f'Either no image or multiple images found for the ID {idx}: {img_file}'
+        mask = Image.open(mask_file)
+        img = Image.open(img_file)
 
         assert img.size == mask.size, \
             f'Image and mask {idx} should be the same size, but are {img.size} and {mask.size}'
