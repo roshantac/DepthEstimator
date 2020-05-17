@@ -26,13 +26,23 @@ class UNet(nn.Module):
 
     def forward(self, x):
         x1 = self.inc(x)
+        y1 = self.inc(x) #------------
         x2 = self.down1(x1)
+        y2 = self.down1(x1) #------------
         x3 = self.down2(x2)
+        y3 = self.down2(y2) #------------ 
         x4 = self.down3(x3)
+        y4 = self.down3(y3) #------------
         x5 = self.down4(x4)
+        y5 = self.down5(y4) #------------
         x = self.up1(x5, x4)
+        y = self.up1(y5, y4) #------------
         x = self.up2(x, x3)
+        y = self.up2(y, y3) #------------
         x = self.up3(x, x2)
+        y = self.up1(y, y2) #------------
         x = self.up4(x, x1)
-        logits = self.outc(x)
-        return logits
+        y = self.up1(y, y1) #------------
+        rt_depth = self.outc(x)
+        rt_mask = self.outc(y) #------------
+        return rt_depth, rt_mask
