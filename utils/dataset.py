@@ -22,6 +22,7 @@ class BasicDataset(Dataset):
     def preprocess(cls, pil_img):
 
         img_nd = np.array(pil_img)
+        img_nd = 255 - img_nd
 
         if len(img_nd.shape) == 2:
             img_nd = np.expand_dims(img_nd, axis=2)
