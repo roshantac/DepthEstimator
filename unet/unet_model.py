@@ -12,17 +12,17 @@ class UNet(nn.Module):
         self.n_classes = n_classes
         self.bilinear = bilinear
     # mask
-        self.inc_m = DoubleConv(n_channels, 32)
-        self.down1_m = Down(32, 64)
-        self.down2_m = Down(64, 128)
-        self.down3_m = Down(128, 256)
+        self.inc_m = DoubleConv(n_channels, 16)
+        self.down1_m = Down(16,32)
+        self.down2_m = Down(32, 64)
+        self.down3_m = Down(64, 128)
         factor = 2 if bilinear else 1
-        self.down4_m = Down(256, 512 // factor)
-        self.up1_m = Up(512, 256 // factor, bilinear)
-        self.up2_m = Up(256, 128 // factor, bilinear)
-        self.up3_m = Up(128, 64 // factor, bilinear)
-        self.up4_m = Up(64, 32, bilinear)
-        self.outc_m = OutConv(32, n_classes)
+        self.down4_m = Down(128, 256 // factor)
+        self.up1_m = Up(256, 128 // factor, bilinear)
+        self.up2_m = Up(128, 64 // factor, bilinear)
+        self.up3_m = Up(64, 32 // factor, bilinear)
+        self.up4_m = Up(32, 16, bilinear)
+        self.outc_m = OutConv(16, n_classes)
     # depth
         self.inc_d = DoubleConv(n_channels, 32)
         self.down1_d = Down(32, 64)
