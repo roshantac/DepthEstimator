@@ -19,10 +19,23 @@ class BasicDataset(Dataset):
         return len(self.data)
 
     @classmethod
-    def preprocess(cls, pil_img):
+    def preprocessDepth(cls, pil_img):
 
         img_nd = np.array(pil_img)
         img_nd = 255 - img_nd
+
+        if len(img_nd.shape) == 2:
+            img_nd = np.expand_dims(img_nd, axis=2)
+
+        # HWC to CHW
+        img_trans = img_nd.transpose((2, 0, 1))
+        if img_trans.max() > 1:
+            img_trans = img_trans / 255
+        return img_trans
+    
+    def preprocess(cls, pil_img):
+
+        img_nd = np.array(pil_img)
 
         if len(img_nd.shape) == 2:
             img_nd = np.expand_dims(img_nd, axis=2)
@@ -42,5 +55,5 @@ class BasicDataset(Dataset):
         bg = self.preprocess(bg)
         fgbg = self.preprocess(fgbg)
         mask = self.preprocess(mask)
-        depth =self.preprocess(depth)
+        depth =self.preprocessDepth(depth)
         return {'bg' : torch.from_numpy(bg), 'fgbg': torch.from_numpy(fgbg), 'mask': torch.from_numpy(mask), 'depth': torch.from_numpy(depth)}
