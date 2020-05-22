@@ -21,7 +21,7 @@ dir_mask = 'data/masks/'
 dir_checkpoint = 'checkpoints/'
 
 
-def train_net(net,
+def train_net2(net,
               device,
               epochs=5,
               batch_size=1,

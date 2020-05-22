@@ -1,3 +1,4 @@
+# predict
 import argparse
 import logging
 import os
@@ -13,28 +14,19 @@ from utils.data_vis import plot_img_and_mask
 from utils.dataset import BasicDataset
 
 
-def predict_img(net,
-                full_img,
-                device,
-                scale_factor=1,
-                out_threshold=0.5):
+def predict_img(net, full_img, device,  out_threshold=0.5):
     net.eval()
-
-    img = torch.from_numpy(BasicDataset.preprocess(full_img, scale_factor))
-
+    img = torch.from_numpy(BasicDataset.preprocess(full_img))
     img = img.unsqueeze(0)
     img = img.to(device=device, dtype=torch.float32)
 
     with torch.no_grad():
-        output = net(img)
-
-        if net.n_classes > 1:
-            probs = F.softmax(output, dim=1)
-        else:
-            probs = torch.sigmoid(output)
-
-        probs = probs.squeeze(0)
-
+        dat = enumerate(testLoader).next()
+        depth, mask = net(img) #depth, mask
+        probs1 = torch.sigmoid(depth)
+        probs2 = torch.sigmoid(mask)
+        probs1 = probs1.squeeze(0)
+        probs2 = probs2.squeeze(0)
         tf = transforms.Compose(
             [
                 transforms.ToPILImage(),
@@ -43,11 +35,13 @@ def predict_img(net,
             ]
         )
 
-        probs = tf(probs.cpu())
-        full_mask = probs.squeeze().cpu().numpy()
-    full_mask = full_mask - np.min(full_mask)
-    full_mask = full_mask / np.max(full_mask)
-    return full_mask #> out_threshold
+        probs1 = tf(probs1.cpu())
+        probs2 = tf(probs2.cpu())
+        full_depth = probs1.squeeze().cpu().numpy()
+        full_mask = probs2.squeeze().cpu().numpy()
+    full_depth = full_depth - np.min(full_depth)
+    full_depth = full_depth / np.max(full_depth)
+    return full_depth , full_mask# > out_threshold
 
 
 def get_output_filenames(args):
