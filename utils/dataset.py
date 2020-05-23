@@ -9,14 +9,7 @@ import logging
 from PIL import Image
 
 
-def getData(root,batch_size ,val_percent):
-    dataset = BasicDataset(root)
-    n_val = int(len(dataset) * val_percent)
-    n_train = len(dataset) - n_val
-    train, val = random_split(dataset, [n_train, n_val])
-    train_loader = DataLoader(train, batch_size=batch_size, shuffle=True, num_workers=8, pin_memory=True)
-    val_loader = DataLoader(val, batch_size=batch_size, shuffle=True, num_workers=8, pin_memory=True, drop_last=True)
-    return train_loader,val_loader
+
 
 class BasicDataset(Dataset):
     def __init__(self, root):
@@ -66,3 +59,12 @@ class BasicDataset(Dataset):
         mask = self.preprocess(mask)
         depth =self.preprocessDepth(depth)
         return {'bg' : torch.from_numpy(bg), 'fgbg': torch.from_numpy(fgbg), 'mask': torch.from_numpy(mask), 'depth': torch.from_numpy(depth)}
+    
+def getData(root,batch_size ,val_percent):
+    dataset = BasicDataset(root)
+    n_val = int(len(dataset) * val_percent)
+    n_train = len(dataset) - n_val
+    train, val = random_split(dataset, [n_train, n_val])
+    train_loader = DataLoader(train, batch_size=batch_size, shuffle=True, num_workers=8, pin_memory=True)
+    val_loader = DataLoader(val, batch_size=batch_size, shuffle=True, num_workers=8, pin_memory=True, drop_last=True)
+    return train_loader,val_loader 
