@@ -24,19 +24,19 @@ def test_net(net, device, test_loader):
     start = datetime.datetime.now()
     with torch.no_grad():
         for data in test_loader:
-            batch['bg'] = batch['bg'].to(device, dtype = torch.float32)
-            batch['fgbg'] = batch['fgbg'].to(device, dtype = torch.float32)
-            batch['mask'] = batch['mask'].to(device, dtype = torch.float32)
-            batch['depth'] = batch['depth'].to(device, dtype = torch.float32) 
+            data['bg'] = data['bg'].to(device, dtype = torch.float32)
+            data['fgbg'] = data['fgbg'].to(device, dtype = torch.float32)
+            data['mask'] = data['mask'].to(device, dtype = torch.float32)
+            data['depth'] = data['depth'].to(device, dtype = torch.float32) 
             output = net(batch)
-            loss1 = criterion(output[1], batch['mask'])
-            loss2 = criterion(output[0], batch['depth']) 
+            loss1 = criterion(output[1], data['mask'])
+            loss2 = criterion(output[0], data['depth']) 
             loss = loss1 + loss2 
             test_loss += loss
         print("Test loss :",test_loss/len(test_loader.dataset))
         print(" Time taken for test ", datetime.datetime.now()- start)
         print("ground truth")
-        show(batch['depth'].detach().cpu(),nrow=8)
+        show(data['depth'].detach().cpu(),nrow=8)
         print("Depth")
         show(output[0].detach().cpu(),nrow=8) # depth
         print("mask")
