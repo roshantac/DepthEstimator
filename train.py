@@ -43,7 +43,7 @@ def test_net(net, device, test_loader):
         show(output[1].detach().cpu(),nrow=8) #mask
         
             
-def train_net(net, device,train_loader, epochs , lr, optimizer,scheduler, criterion ):
+def train_net(net, device,train_loader, optimizer,scheduler, criterion ):
     init = datetime.datetime.now()
     net.train()    
     pbar = tqdm(train_loader)
