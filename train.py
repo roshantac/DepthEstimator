@@ -28,7 +28,7 @@ def test_net(net, device, test_loader):
             data['fgbg'] = data['fgbg'].to(device, dtype = torch.float32)
             data['mask'] = data['mask'].to(device, dtype = torch.float32)
             data['depth'] = data['depth'].to(device, dtype = torch.float32) 
-            output = net(batch)
+            output = net(data)
             loss1 = criterion(output[1], data['mask'])
             loss2 = criterion(output[0], data['depth']) 
             loss = loss1 + loss2 
