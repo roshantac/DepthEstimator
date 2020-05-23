@@ -15,7 +15,7 @@ import datetime
 from torch.utils.tensorboard import SummaryWriter
 from utils.dataset import BasicDataset
 from torch.utils.data import DataLoader, random_split
-
+from utils.data_vis import *
 
 def test_net(net, device, test_loader,criterion):
     net.eval()
