@@ -17,7 +17,7 @@ from utils.dataset import BasicDataset
 from torch.utils.data import DataLoader, random_split
 
 
-def test_net(net, device, test_loader):
+def test_net(net, device, test_loader,criterion):
     net.eval()
     test_loss = 0
     correct = 0
