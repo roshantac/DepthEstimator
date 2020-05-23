@@ -60,7 +60,7 @@ def train_net(net, device,train_loader, optimizer,scheduler, criterion ):
         loss2 = criterion(output[0], batch['depth']) 
         loss = 2*loss1 + loss2 
         epoch_loss += loss.item()
-        pbar.set_postfix(desc  = f'Epoch : {epoch+1}  Loss : {loss.item()}  l1: {loss1.item()} l2 = {loss2.item()}')
+        pbar.set_postfix(desc  = f' Loss : {loss.item()}  Loss(mask): {loss1.item()} Loss(depth): {loss2.item()}')
         optimizer.zero_grad()
         loss.backward()
         nn.utils.clip_grad_value_(net.parameters(), 0.1)
