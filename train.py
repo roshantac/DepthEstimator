@@ -2,7 +2,7 @@ import argparse
 import logging
 import os
 import sys
-
+from utils.data_vis import *
 import numpy as np
 import torch
 import torch.nn as nn
@@ -15,15 +15,16 @@ import datetime
 from torch.utils.tensorboard import SummaryWriter
 from utils.dataset import BasicDataset
 from torch.utils.data import DataLoader, random_split
-from utils.data_vis import *
+
 
 def test_net(net, device, test_loader,criterion):
     net.eval()
     test_loss = 0
     correct = 0
     start = datetime.datetime.now()
+    bar = tqdm(test_loader)
     with torch.no_grad():
-        for data in test_loader:
+        for k,data in enumerate(bar):
             data['bg'] = data['bg'].to(device, dtype = torch.float32)
             data['fgbg'] = data['fgbg'].to(device, dtype = torch.float32)
             data['mask'] = data['mask'].to(device, dtype = torch.float32)
@@ -60,7 +61,7 @@ def train_net(net, device,train_loader, optimizer,scheduler, criterion ):
         loss2 = criterion(output[0], batch['depth']) 
         loss = 2*loss1 + loss2 
         epoch_loss += loss.item()
-        pbar.set_postfix(desc  = f' Loss : {loss.item()}  Loss(mask): {loss1.item()} Loss(depth): {loss2.item()}')
+        pbar.set_postfix(desc  = f' Training:  Loss : {loss.item()}  l1: {loss1.item()} l2 = {loss2.item()}')
         optimizer.zero_grad()
         loss.backward()
         nn.utils.clip_grad_value_(net.parameters(), 0.1)
