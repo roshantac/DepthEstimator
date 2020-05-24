@@ -41,6 +41,7 @@ def test_net(net, device, test_loader,criterion):
         show(output[0].detach().cpu(),nrow=8) # depth
         print("mask")
         show(output[1].detach().cpu(),nrow=8) #mask
+    return (test_loss/len(test_loader.dataset)) 
         
             
 def train_net(net, device,train_loader, optimizer,scheduler, criterion ):
