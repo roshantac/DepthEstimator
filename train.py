@@ -68,6 +68,7 @@ def train_net(net, device,train_loader, optimizer,scheduler, criterion ):
         
     
     end=  datetime.datetime.now()
+    torch.save(net.state_dict(), '/content/drive/My Drive/models/CP_epoch.pth')
     print("Time taken for Training 1 epoch is: ", end-start)
 
 #         print("ground truth")
