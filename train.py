@@ -9,7 +9,6 @@ import torch.nn as nn
 from torch import optim
 from tqdm import tqdm
 from kornia.losses import SSIM
-from eval import eval_net
 from unet import UNet
 import datetime
 from torch.utils.tensorboard import SummaryWriter
